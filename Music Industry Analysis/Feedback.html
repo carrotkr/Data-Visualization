@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title> CS 360/560 Spring 2019 </title>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- bulma 0.7.2 and font awesome v5.7.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" integrity="sha256-2pUeJf+y0ltRPSbKOeJh09ipQFYxUdct5nTY6GAXswA=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  
+  <style>
+    body {
+      font-family: "Lato", sans-serif
+    }
+
+    /*body {
+      font: 10px sans-serif;
+    }*/
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .bar {
+      fill: steelblue;
+    }
+
+    /*.x.axis path {
+      display: none;
+    }*/
+
+    .tooltip {
+      text-anchor: middle;
+      font-family: sans-serif;
+      font-size: 10px;
+      /*font-weight: bold;*/
+      fill:black; 
+    }
+  </style>
+</head>
+
+<body>
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-black w3-card">
+    <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu">
+      <i class="fa fa-bars"> </i>
+    </a>
+
+    <a href="index.html" class="w3-bar-item w3-button w3-padding-large">
+      <span class="icon">
+        <i class="fas fa-home"> </i>
+      </span>
+      <span> Home </span>
+    </a>
+
+    <a href="Data.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-table"> </i>
+      </span>
+      <span> Data and Processing </span>
+    </a>
+
+    <a href="Visualization_1.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Visualization 1 </span>
+    </a>
+
+    <a href="Visualization_2.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Visualization 2 </span>
+    </a>
+
+    <a href="Visualization_3.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Visualization 3 </span>
+    </a>
+
+    <a href="Feedback.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Feedback </span>
+    </a>
+
+    <div class="navbar-end">
+      <a href="About.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+        <span class="icon">
+          <i class="fas fa-info-circle"> </i>
+        </span>
+        <span> About </span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="w3-content" style="max-width:2000px;margin-top:46px">
+  <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:960px">
+    
+    <h3> <b>Feedback and Affected the Final Version</b> </h3>
+    <p class="w3-justify">
+      <b>Visual Encodings</b>: The choropleth map represents a map of the world and the bar chart is used to represent specific revenue attributions for each country.
+      <br/>
+      <b>Non-Color Encodings</b>: The use of a gray base map makes the colored countries easily identifiable.
+      <br/>
+      <b>Color Encodings</b>: It is good categorical color scheme I chose for the bar chart and a sequential color scheme for the map is appropriate but I changed the orange color. The bright orange is a little harsh on the eyes.
+      <br/>
+      <b>Context</b>: The only thing I would add is a legend in the map visualization to show what the color represents.
+      <br/>
+      <b>Lie Factor</b>: Some countries are more emphasized due to the map, but I don't think it is a big deal. It is better to have a normal map.
+      <br/>
+      <b>Data Ink Ratio</b>: The only thing I changed is to take away the gray countries at the bottom like Antarctica so that the visualization mainly captures countries with valid data.
+      <br/>
+      <b>Data Density</b>: The amount of data for the visualizations are both appropriate.
+      <br/>
+      <b>Gestalt Principles</b>: The background vs foreground is easy to interpret.
+      <br/>
+      <b>Interactivity</b>: I got feedback that linked interactivity is good. It not only provides extra exploration but it also provides great context.
+      <br/>
+      <b>Design and Aesthetics</b>: I got feedback that just be careful when I implement your final visualization and make sure that the bar chart and the map are easy to see when you have them on the same page because it could get overcrowded. But I think that it is better to represent separate pages.
+      <br/>
+      <b>Understanding</b>: I got feedback that most people learned that the US and Japan bring in the top two revenues in the music industry.
+      <br/>
+      <b>Visualization</b>: I got feedback that visualization goal is to examine the world's top 20 countries that bring in the most music revenue. It is a good idea! The visualizations are good to explore and answer my goal's question to the fullest.
+    </p>
+  </div>
+</div>
+</body>
+<!-- separator between sections -->
+<hr class="container">
+
+<!-- footer -->
+<footer class="footer">
+  <div class="content has-text-centered">
+    <small>
+      <a href="#top">
+        <span class="fas fa-arrow-up"> </span>
+        <span> Back to Top </span>
+      </a>
+      <br/>
+      <a href="/"> CS 360/560 Data Visualization </a>
+      &bullet;
+      <a href="https://myusf.usfca.edu/arts-sciences/computer-science">Department of Computer Science </a>
+      &bullet;
+      <a href="https://www.usfca.edu/"> University of San Franciscio </a>
+    </small>
+  </div>
+</footer>
+</html>

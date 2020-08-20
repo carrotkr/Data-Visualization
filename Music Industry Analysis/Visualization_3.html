@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title> CS 360/560 Spring 2019 </title>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- bulma 0.7.2 and font awesome v5.7.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" integrity="sha256-2pUeJf+y0ltRPSbKOeJh09ipQFYxUdct5nTY6GAXswA=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  
+  <style>
+    body {
+      font-family: "Lato", sans-serif
+    }
+    
+    .boundary {
+      fill: none;
+      stroke: #888;
+      stroke-linejoin: round;
+    }
+    
+    svg {
+      border-style: solid;
+      border-width: 1px;
+      border-color: #ccc;
+    }
+    
+    
+    /* New class for the overlay zoom */
+    .overlay {
+      fill: none;
+      pointer-events: all;
+    }
+
+    .names {
+      fill: none;
+      stroke: #fff;
+      stroke-linejoin: round;
+    }
+
+    /* Tooltip CSS */
+    .d3-tip {
+      line-height: 1.5;
+      font-weight: 400;
+      font-family:"avenir next", Arial, sans-serif;
+      padding: 6px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #FFA500;
+      border-radius: 1px;
+      pointer-events: none;
+    }
+
+    /* Creates a small triangle extender for the tooltip */
+    .d3-tip:after {      
+      box-sizing: border-box;
+      display: inline;
+      font-size: 8px;
+      width: 100%;
+      line-height: 1.5;
+      color: rgba(0, 0, 0, 0.6);
+      position: absolute;
+      pointer-events: none;
+    }
+
+    /* Northward tooltips */
+    .d3-tip.n:after {
+      content: "\25BC";
+      margin: -1px 0 0 0;
+      top: 100%;
+      left: 0;
+      text-align: center;
+    }
+
+    /* Eastward tooltips */
+    .d3-tip.e:after {
+      content: "\25C0";
+      margin: -4px 0 0 0;
+      top: 50%;
+      left: -8px;
+    }
+
+    /* Southward tooltips */
+    .d3-tip.s:after {
+      content: "\25B2";
+      margin: 0 0 1px 0;
+      top: -8px;
+      left: 0;
+      text-align: center;
+    }
+
+    /* Westward tooltips */
+    .d3-tip.w:after {
+      content: "\25B6";
+      margin: -4px 0 0 -1px;
+      top: 50%;
+      left: 100%;
+    }
+
+    /*text{
+      pointer-events:none;
+    }*/
+
+    .details{
+      color:white;
+    }
+  </style>
+</head>
+
+<body>
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-black w3-card">
+    <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu">
+      <i class="fa fa-bars"> </i>
+    </a>
+
+    <a href="index.html" class="w3-bar-item w3-button w3-padding-large">
+      <span class="icon">
+        <i class="fas fa-home"> </i>
+      </span>
+      <span> Home </span>
+    </a>
+
+    <a href="Data.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-table"> </i>
+      </span>
+      <span> Data and Processing </span>
+    </a>
+
+    <a href="Visualization_1.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Visualization 1 </span>
+    </a>
+
+    <a href="Visualization_2.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Visualization 2 </span>
+    </a>
+
+    <a href="Visualization_3.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Visualization 3 </span>
+    </a>
+
+    <a href="Feedback.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Feedback </span>
+    </a>
+
+    <div class="navbar-end">
+      <a href="About.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+        <span class="icon">
+          <i class="fas fa-info-circle"> </i>
+        </span>
+        <span> About </span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="w3-content" style="max-width:2000px;margin-top:46px">
+  <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:960px">
+    <h2> <b>Top 20 Global Music Industry Market</b> </h2>
+    
+    <div id="map"> </div>
+    <div id="tooltip"> </div>
+
+    <!-- <style type="text/css"> </style> -->
+
+    <!-- <svg width="100%" height="100%" style="background-color: white;"> </svg> -->
+    <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"> </script>
+    <script src="d3-tip.js"> </script>
+    <script src="Visualization_3_Total_Map.js"> </script>
+    
+    <h3> <b>Discussion</b> </h3>
+    <p class="w3-justify">
+      Asia and Australasia: 2018 marked Asia and Australasia move up to become the second largest global region for physical and digital revenue combined, posting growth of 11.7%.
+      <br/>
+      Latin America: Latin America grew by 16.8%, once again the highest rate of growth globally. The region reflected global trends with declines in physical revenue (-37.8%) and downloads (-45.0%), but strong results in streaming (+39.3%).
+      <br/>
+      Europe: Europe posted modest growth (+0.1%) in 2018, with a varied market for countries across the region. Overall, paid streaming in Europe rose by 29.2%, whilst physical revenues fell by 19.4% and downloads by 24.3%.
+      <br/>
+      North America: North America recorded another year of double-digit growth, increasing by 14.0%. Strong streaming growth (+33.4%) account the decline in physical revenues (-22.0%). The US posted an increase of 15.0% and maintained its position as the world’s largest music market. The fastest growing format in the US was paid streaming, which accounted for well over half (59.4%) of digital revenue.
+    </p>
+
+    <h3> <b>Credit</b> </h3>
+    <p class="w3-justify">
+      - Murray, Scott. Interactive Data Visualization for the Web
+      <br/>
+      - Rininsland, Andrew. D3.js Data Visualization
+      <br/>
+      - Zhu, Nick Qi. Data Visualization with D3.js Cookbook
+      <br/>
+      - Dale, Kyran. Data Visualization with Python and JavaScript
+      <br/>
+      - Newton, Thomas. Learning D3.js Mapping - Second Edition: Build cutting-edge maps and visualizations with JavaScript
+    </p>
+  </div>
+</div>
+
+<!-- separator between sections -->
+<hr class="container">
+
+<!-- footer -->
+<footer class="footer">
+  <div class="content has-text-centered">
+    <small>
+      <a href="#top">
+        <span class="fas fa-arrow-up"> </span>
+        <span> Back to Top </span>
+      </a>
+      <br/>
+      <a href="/"> CS 360/560 Data Visualization </a>
+      &bullet;
+      <a href="https://myusf.usfca.edu/arts-sciences/computer-science">Department of Computer Science </a>
+      &bullet;
+      <a href="https://www.usfca.edu/"> University of San Franciscio </a>
+    </small>
+  </div>
+</footer>
+</body>
+</html>

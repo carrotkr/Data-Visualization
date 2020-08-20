@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title> CS 360/560 Spring 2019 </title>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- bulma 0.7.2 and font awesome v5.7.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" integrity="sha256-2pUeJf+y0ltRPSbKOeJh09ipQFYxUdct5nTY6GAXswA=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+  <style>
+  .bar {
+    fill: silver;
+  }
+
+  .bar:hover {
+    fill: orange;
+  }
+
+  .axis--x path {
+    display: none;
+  }
+
+  /*svg {
+      border-style: solid;
+      border-width: 1px;
+      border-color: #ccc;
+  }*/
+
+  body {
+      font-family: "Lato", sans-serif
+  }
+  </style>
+</head>
+
+<body>
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-black w3-card">
+    <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu">
+      <i class="fa fa-bars"> </i>
+    </a>
+
+    <a href="index.html" class="w3-bar-item w3-button w3-padding-large">
+      <span class="icon">
+        <i class="fas fa-home"> </i>
+      </span>
+      <span> Home </span>
+    </a>
+
+    <a href="Data.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-table"> </i>
+      </span>
+      <span> Data and Processing </span>
+    </a>
+
+    <a href="Visualization_1.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Visualization 1 </span>
+    </a>
+
+    <a href="Visualization_2.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Visualization 2 </span>
+    </a>
+
+    <a href="Visualization_3.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Visualization 3 </span>
+    </a>
+
+    <a href="Feedback.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Feedback </span>
+    </a>
+
+    <div class="navbar-end">
+      <a href="About.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+        <span class="icon">
+          <i class="fas fa-info-circle"> </i>
+        </span>
+        <span> About </span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="w3-content" style="max-width:2000px;margin-top:46px">
+  <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:960px">
+    <h2> <b>Total Revenue in 2018</b> </h2>
+
+    <div id="total"> </div>
+
+    <!-- <svg width="960" height="500"> </svg> -->
+    <!-- <svg width="100%" height="100%" style="background-color: white;"> </svg> -->
+    <script src="https://d3js.org/d3.v5.min.js"> </script>
+    <script src="Visualization_2_Total.js"> </script>
+
+    <h3> <b>Discussion</b> </h3>
+    <p class="w3-justify">
+      Diverse music markets evolving rapidly and finding ways to grow. Within the top 10, some of the fastest growing markets are in Asia and Latin America (South Korea, Brazil) with Asia becoming the second largest region for physical and digital music combined for the first time. One of the most exciting aspects of this global growth is the regions driving it. For the fourth year in a row, Latin America has seen the largest regional growth, with countries like Brazil leading the way. Asia has become a world player, with markets like China and South Korea fuelling growth. The Middle East and North Africa are now commanding attention. Crucially, these territories and the artists emerging from them are already receiving the real benefit.
+    </p>
+  </div>
+</div>
+
+<div class="w3-content" style="max-width:2000px;margin-top:46px">
+  <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:960px">
+    <h2> <b>Physical Format Revenue in 2018</b> </h2>
+
+    <div id="physical"> </div>
+
+    <script src="https://d3js.org/d3.v5.min.js"> </script>
+    <script src="Visualization_2_Physical.js"> </script>
+
+    <h3> <b>Discussion</b> </h3>
+    <p class="w3-justify">
+      Physical format revenue saw a continued decline in 2018, dropping by 10.1% and now accounting for around a quarter of the total market (24.7%). As in the previous year, the majority of markets saw a decrease in physical format revenues, but a small number of markets remained the trend, posting growth (India +21.2%; Japan +2.3%; South Korea +28.8%), and physical revenues still constitute a significant percentage of the market in some countries (representing 71%, and 35% of the market in Japan, and Germany respectively). Revenues from vinyl also sustained their upward trend, posting growth for the thirteenth consecutive year, growing 6.0% and maintaining a 3.6% share of the overall market.
+    </p>
+  </div>
+</div>
+
+<div class="w3-content" style="max-width:2000px;margin-top:46px">
+  <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:960px">
+    <h2> <b>Digital Format Revenue in 2018</b> </h2>
+
+    <div id="digitial"> </div>
+
+    <script src="https://d3js.org/d3.v5.min.js"> </script>
+    <script src="Visualization_2_Digital.js"> </script>
+
+    <h3> <b>Discussion</b> </h3>
+    <p class="w3-justify">
+      Overall digital revenues grew by 21.1% to US$11.2 billion in 2018, crossing the US$10 billion mark for the first time ever and now accounting for 58.9% of total recorded music revenues. Within this format, the data was varied with streaming pushing growth up strongly increasing by 34.0% to US$8.9 billion, while downloads saw a decline of 21.2%, dropping to 7.7% of the total market. Paid streaming, in particular, was again a key fact that +32.9%, with almost all markets reporting growth in this area. Digital now makes up more than 50% of revenue in 20 markets.
+    </p>
+
+    <h3> <b>Credit</b> </h3>
+    <p class="w3-justify">
+      - Murray, Scott. Interactive Data Visualization for the Web
+      <br/>
+      - Rininsland, Andrew. D3.js Data Visualization
+      <br/>
+      - Zhu, Nick Qi. Data Visualization with D3.js Cookbook
+      <br/>
+      - Dale, Kyran. Data Visualization with Python and JavaScript
+      <br/>
+      - Newton, Thomas. Learning D3.js Mapping - Second Edition: Build cutting-edge maps and visualizations with JavaScript
+    </p>
+  </div>
+</div>
+</body>
+
+<!-- separator between sections -->
+<hr class="container">
+
+<!-- footer -->
+<footer class="footer">
+  <div class="content has-text-centered">
+    <small>
+      <a href="#top">
+        <span class="fas fa-arrow-up"> </span>
+        <span> Back to Top </span>
+      </a>
+      <br/>
+      <a href="/"> CS 360/560 Data Visualization </a>
+      &bullet;
+      <a href="https://myusf.usfca.edu/arts-sciences/computer-science">Department of Computer Science </a>
+      &bullet;
+      <a href="https://www.usfca.edu/"> University of San Franciscio </a>
+    </small>
+  </div>
+</footer>
+</html>
