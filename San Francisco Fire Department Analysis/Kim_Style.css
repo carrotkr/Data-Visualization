@@ -1,0 +1,12 @@
+img {
+  margin-right: 1px;
+  vertical-align: middle;
+}
+
+button {
+  padding: 1px;
+}
+
+rect:hover {
+	fill: orange;
+}

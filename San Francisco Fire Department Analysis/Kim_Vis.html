@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html>
+
+<!-- head -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>CS 360/560 Spring 2019</title>
+
+  <!-- bulma 0.7.2 and font awesome v5.7.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" integrity="sha256-2pUeJf+y0ltRPSbKOeJh09ipQFYxUdct5nTY6GAXswA=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="Kim_Data/Kim_Style.css">
+  <script src="https://d3js.org/d3.v5.min.js"> </script>
+</head>
+
+<!-- body -->
+<body>
+  <!-- header -->
+  <section class="hero is-primary is-bold">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title"> Response Time to Arrive on Scene </h1>
+      </div>
+    </div>
+
+    <!-- todo: change navigation as needed -->
+    <div class="hero-foot">
+      <div class="container">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+          <div class="navbar-brand">
+            <a class="navbar-item" href="index.html">
+              <span class="icon">
+                <i class="fas fa-home"></i>
+              </span>
+              <span> Home </span>
+            </a>
+          </div>
+
+          <a class="navbar-item" href="DavidVis.html">
+            <span class="icon">
+              <i class="fas fa-chart-area"></i>
+            </span>
+            <span>Response Time Disposition</span>
+          </a>
+          
+          <a class="navbar-item" href="DavidVis2.html">
+            <span class="icon">
+              <i class="fas fa-chart-area"></i>
+            </span>
+            <span>Calls per Disposition</span>
+          </a>
+
+          <a class="navbar-item" href="Yen_Vis.html">
+            <span class="icon">
+              <i class="fas fa-chart-area"></i>
+            </span>
+            <span> Highest Num. of Alarms </span>
+          </a>
+
+          <a class="navbar-item" href="Nico_Vis.html">
+            <span class="icon">
+              <i class="fas fa-chart-area"></i>
+            </span>
+            <span> Average Response Time </span>
+          </a>
+
+          <a class="navbar-item" href="Kim_Vis.html">
+              <span class="icon">
+                <i class="fas fa-chart-area"></i>
+              </span>
+              <span> Response Time Neighborhood </span>
+          </a>
+
+          <a class="navbar-item" href="prototypes.html">
+              <span class="icon">
+                <i class="fas fa-chart-area"></i>
+              </span>
+              <span>Prototypes</span>
+          </a>
+
+          <div class="navbar-end">
+            <a class="navbar-item" href="dataAndProcessing.html">
+              <span class="icon">
+                <i class="fas fa-tasks"></i>
+              </span>
+              <span> D&P </span>
+            </a>
+
+            <a class="navbar-item" href="About.html">
+              <span class="icon">
+                <i class="fas fa-info-circle"></i>
+              </span>
+              <span> About </span>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container content">
+      <h3> Response Time to Arrive on Scene </h3>
+
+      <script type="text/javascript">
+function Bayview_Hunters_Point() {
+  d3.select('svg').remove();
+  var svg = d3.select('body').append('svg').attr('width','960').attr('height','600'),
+      inner = svg.append('g');
+
+  var WIDTH = 960;
+  var HEIGHT = 500;
+
+  // Set width and height of svg.
+  d3.select('svg')
+      .style('width', WIDTH)
+      .style('height', HEIGHT);
+
+  // Fetch data.
+  d3.csv('Kim_Data/Bayview_Hunters_Point.csv').then(function(csv_data) {
+    var dataset = d3.nest()
+      .key(function(d) {
+        return d.Arrival_DtTm;
+      })
+      .rollup(function(v) {
+        return v.length;
+      })
+      .entries(csv_data);
+
+    console.log(dataset);
+
+    // Select rectangles within svg.
+    d3.select('svg').selectAll('rect')
+        // Attach data to the rectangles.
+        .data(dataset)
+        // Find the data elements that are not attached to rectangles.
+        .enter()
+        // Append rectangles for each data not attached to a rectangle.
+        .append('rect');
+
+    // Create a linear scale.
+  var yScale = d3.scaleLinear();
+    // Set its visual range to 600->0.
+    yScale.range([HEIGHT, 0]);
+    // Get the minimum y data value by looking at the count property of each datum.
+    var yMin = d3.min(dataset, function(datum, index){
+        return datum.value;
+    })
+    console.log(yMin);
+    // Get the maximum y data value by looking at the count property of each datum.
+    var yMax = d3.max(dataset, function(datum, index){
+        return datum.value;
+    })
+    // console.log(yMax);
+    // Set the domain of yScale from yMin and yMax.
+    yScale.domain([yMin-30, yMax]);
+    d3.selectAll('rect')
+        .attr('height', function(datum, index) {
+        // Set the height of each rectangle by getting the count property of each datum
+        //  converting it to a visual value, using yScale
+        //  then subtract that value from HEIGHT.
+            return HEIGHT-yScale(datum.value);
+        });
+
+  //-----Adjusting the horizontal and the vertical placement of the bars.-----//
+
+  // Create the xScale.
+    var xScale = d3.scaleLinear();
+    // Set the range to 0->800.
+    xScale.range([0, WIDTH]);
+  // Set the domain from 0 to the number of data elements retrieved.
+    xScale.domain([0, dataset.length]);
+    // Select all rectangles.
+    d3.selectAll('rect')
+        .attr('x', function(datum, index) {
+            // Set the x position of each rectangle
+            //  by converting the index of the elemnt in the array to a point between 0->800.
+            return xScale(index);
+        });
+    d3.selectAll('rect')
+        .attr('y', function(datum, index){
+            // Set the y position of each rectangle
+            //  by converting the count property of the datum to a visual value.
+            return yScale(datum.value);
+        });
+
+    //-----Making the width of the bars dynamic.-----//
+
+    // Set the width of all rectangles to be the width of the SVG divided by the number of data elements.
+    d3.selectAll('rect')
+        .attr('width', WIDTH/dataset.length);
+
+    //-----Interactivity.-----//
+
+    d3.selectAll('rect')
+        .append("title")
+        .text(function(dataset) {
+            return "Response Time: " + dataset.key + "(hh:mm)" + "\n"
+                + "Count: " + dataset.value;
+        });
+
+    //-----Changing the color of the bar based on data.-----//
+
+    var yDomain = d3.extent(dataset, function(datum, index) {
+        // Set the y domain by getting the min/max
+        //  and examining the count property of each datum.
+        return datum.value;
+    })
+
+    // Create a linear scale.
+    var colorScale = d3.scaleLinear();
+    colorScale.domain(yDomain)
+    // colorScale.range(['#00cc00', 'blue']) // The visual range goes from green->blue.
+    colorScale.range(['#bbbbbb', '#595959'])
+
+    d3.selectAll('rect')
+        .attr('fill', function(datum, index) {
+            // Set the fill of each rectangle
+            //  by converting the count property of the datum to a color.
+            return colorScale(datum.value)
+        })
+  });
+}
+      </script>
+      <button type="button" style="height:150px;width:150px" onclick="Bayview_Hunters_Point();">
+        <img src="Kim_Data/Bayview_Hunters_Point.png" alt="Place Holder" />
+        Bayview Hunters Point
+      </button>
+
+      <script type="text/javascript">
+function Bernal_Heights() {
+  d3.select("svg").remove();
+  var svg = d3.select("body").append("svg").attr("width","960").attr("height", "600"),
+      inner = svg.append("g");
+
+  var WIDTH = 960;
+  var HEIGHT = 500;
+
+  // Set width and height of svg.
+  d3.select('svg')
+      .style('width', WIDTH)
+      .style('height', HEIGHT);
+
+  // Fetch data.
+  d3.csv('Kim_Data/Bernal_Heights.csv').then(function(csv_data) {
+    var dataset = d3.nest()
+      .key(function(d) {
+        return d.Arrival_DtTm;
+      })
+      .rollup(function(v) {
+        return v.length;
+      })
+      .entries(csv_data);
+
+    console.log(dataset);
+
+    // Select rectangles within svg.
+    d3.select('svg').selectAll('rect')
+        // Attach data to the rectangles.
+        .data(dataset)
+        // Find the data elements that are not attached to rectangles.
+        .enter()
+        // Append rectangles for each data not attached to a rectangle.
+        .append('rect');
+
+    // Create a linear scale.
+  var yScale = d3.scaleLinear();
+    // Set its visual range to 600->0.
+    yScale.range([HEIGHT, 0]);
+    // Get the minimum y data value by looking at the count property of each datum.
+    var yMin = d3.min(dataset, function(datum, index){
+        return datum.value;
+    })
+    console.log(yMin);
+    // Get the maximum y data value by looking at the count property of each datum.
+    var yMax = d3.max(dataset, function(datum, index){
+        return datum.value;
+    })
+    // console.log(yMax);
+    // Set the domain of yScale from yMin and yMax.
+    yScale.domain([yMin-30, yMax]);
+    d3.selectAll('rect')
+        .attr('height', function(datum, index) {
+        // Set the height of each rectangle by getting the count property of each datum
+        //  converting it to a visual value, using yScale
+        //  then subtract that value from HEIGHT.
+            return HEIGHT-yScale(datum.value);
+        });
+
+  //-----Adjusting the horizontal and the vertical placement of the bars.-----//
+
+  // Create the xScale.
+    var xScale = d3.scaleLinear();
+    // Set the range to 0->800.
+    xScale.range([0, WIDTH]);
+  // Set the domain from 0 to the number of data elements retrieved.
+    xScale.domain([0, dataset.length]);
+    // Select all rectangles.
+    d3.selectAll('rect')
+        .attr('x', function(datum, index) {
+            // Set the x position of each rectangle
+            //  by converting the index of the elemnt in the array to a point between 0->800.
+            return xScale(index);
+        });
+    d3.selectAll('rect')
+        .attr('y', function(datum, index){
+            // Set the y position of each rectangle
+            //  by converting the count property of the datum to a visual value.
+            return yScale(datum.value);
+        });
+
+    //-----Making the width of the bars dynamic.-----//
+
+    // Set the width of all rectangles to be the width of the SVG divided by the number of data elements.
+    d3.selectAll('rect')
+        .attr('width', WIDTH/dataset.length);
+
+    //-----Interactivity.-----//
+
+    d3.selectAll('rect')
+        .append("title")
+        .text(function(dataset) {
+            return "Response Time: " + dataset.key + "(hh:mm)" + "\n"
+                + "Count: " + dataset.value;
+        });
+
+    //-----Changing the color of the bar based on data.-----//
+
+    var yDomain = d3.extent(dataset, function(datum, index) {
+        // Set the y domain by getting the min/max
+        //  and examining the count property of each datum.
+        return datum.value;
+    })
+
+    // Create a linear scale.
+    var colorScale = d3.scaleLinear();
+    colorScale.domain(yDomain)
+    // colorScale.range(['#00cc00', 'blue']) // The visual range goes from green->blue.
+    colorScale.range(['#bbbbbb', '#595959'])
+
+    d3.selectAll('rect')
+        .attr('fill', function(datum, index) {
+            // Set the fill of each rectangle
+            //  by converting the count property of the datum to a color.
+            return colorScale(datum.value)
+        })
+  });
+}
+    </script>
+    <button type="button" style="height:150px;width:150px" onclick="Bernal_Heights();">
+      <img src="Kim_Data/Bernal_Heights.png" alt="Place Holder" />
+      Bernal Heights
+    </button>
+    
+    <script type="text/javascript">
+function Castro_Upper_Market() {
+  d3.select('svg').remove();
+  var svg = d3.select('body').append('svg').attr('width','960').attr('height','600'),
+      inner = svg.append('g');
+
+  var WIDTH = 960;
+  var HEIGHT = 500;
+
+  // Set width and height of svg.
+  d3.select('svg')
+      .style('width', WIDTH)
+      .style('height', HEIGHT);
+
+  // Fetch data.
+  d3.csv('Kim_Data/Castro_Upper_Market.csv').then(function(csv_data) {
+    var dataset = d3.nest()
+      .key(function(d) {
+        return d.Arrival_DtTm;
+      })
+      .rollup(function(v) {
+        return v.length;
+      })
+      .entries(csv_data);
+
+    console.log(dataset);
+
+    // Select rectangles within svg.
+    d3.select('svg').selectAll('rect')
+        // Attach data to the rectangles.
+        .data(dataset)
+        // Find the data elements that are not attached to rectangles.
+        .enter()
+        // Append rectangles for each data not attached to a rectangle.
+        .append('rect');
+
+    // Create a linear scale.
+  var yScale = d3.scaleLinear();
+    // Set its visual range to 600->0.
+    yScale.range([HEIGHT, 0]);
+    // Get the minimum y data value by looking at the count property of each datum.
+    var yMin = d3.min(dataset, function(datum, index){
+        return datum.value;
+    })
+    console.log(yMin);
+    // Get the maximum y data value by looking at the count property of each datum.
+    var yMax = d3.max(dataset, function(datum, index){
+        return datum.value;
+    })
+    // console.log(yMax);
+    // Set the domain of yScale from yMin and yMax.
+    yScale.domain([yMin-30, yMax]);
+    d3.selectAll('rect')
+        .attr('height', function(datum, index) {
+        // Set the height of each rectangle by getting the count property of each datum
+        //  converting it to a visual value, using yScale
+        //  then subtract that value from HEIGHT.
+            return HEIGHT-yScale(datum.value);
+        });
+
+  //-----Adjusting the horizontal and the vertical placement of the bars.-----//
+
+  // Create the xScale.
+    var xScale = d3.scaleLinear();
+    // Set the range to 0->800.
+    xScale.range([0, WIDTH]);
+  // Set the domain from 0 to the number of data elements retrieved.
+    xScale.domain([0, dataset.length]);
+    // Select all rectangles.
+    d3.selectAll('rect')
+        .attr('x', function(datum, index) {
+            // Set the x position of each rectangle
+            //  by converting the index of the elemnt in the array to a point between 0->800.
+            return xScale(index);
+        });
+    d3.selectAll('rect')
+        .attr('y', function(datum, index){
+            // Set the y position of each rectangle
+            //  by converting the count property of the datum to a visual value.
+            return yScale(datum.value);
+        });
+
+    //-----Making the width of the bars dynamic.-----//
+
+    // Set the width of all rectangles to be the width of the SVG divided by the number of data elements.
+    d3.selectAll('rect')
+        .attr('width', WIDTH/dataset.length);
+
+    //-----Interactivity.-----//
+
+    d3.selectAll('rect')
+        .append("title")
+        .text(function(dataset) {
+            return "Response Time: " + dataset.key + "(hh:mm)" + "\n"
+                + "Count: " + dataset.value;
+        });
+
+    //-----Changing the color of the bar based on data.-----//
+
+    var yDomain = d3.extent(dataset, function(datum, index) {
+        // Set the y domain by getting the min/max
+        //  and examining the count property of each datum.
+        return datum.value;
+    })
+
+    // Create a linear scale.
+    var colorScale = d3.scaleLinear();
+    colorScale.domain(yDomain)
+    // colorScale.range(['#00cc00', 'blue']) // The visual range goes from green->blue.
+    colorScale.range(['#bbbbbb', '#595959'])
+
+    d3.selectAll('rect')
+        .attr('fill', function(datum, index) {
+            // Set the fill of each rectangle
+            //  by converting the count property of the datum to a color.
+            return colorScale(datum.value)
+        })
+  });
+}
+    </script>
+    <button type="button" style="height:150px;width:150px" onclick="Castro_Upper_Market();">
+      <img src="Kim_Data/Castro_Upper_Market.png" alt="Place Holder" />
+      Castro/Upper Market
+    </button>
+
+    <script type="text/javascript">
+function Chinatown() {
+  d3.select('svg').remove();
+  var svg = d3.select('body').append('svg').attr('width','960').attr('height','600'),
+      inner = svg.append('g');
+
+  var WIDTH = 960;
+  var HEIGHT = 500;
+
+  // Set width and height of svg.
+  d3.select('svg')
+      .style('width', WIDTH)
+      .style('height', HEIGHT);
+
+  // Fetch data.
+  d3.csv('Kim_Data/Chinatown.csv').then(function(csv_data) {
+    var dataset = d3.nest()
+      .key(function(d) {
+        return d.Arrival_DtTm;
+      })
+      .rollup(function(v) {
+        return v.length;
+      })
+      .entries(csv_data);
+
+    console.log(dataset);
+
+    // Select rectangles within svg.
+    d3.select('svg').selectAll('rect')
+        // Attach data to the rectangles.
+        .data(dataset)
+        // Find the data elements that are not attached to rectangles.
+        .enter()
+        // Append rectangles for each data not attached to a rectangle.
+        .append('rect');
+
+    // Create a linear scale.
+  var yScale = d3.scaleLinear();
+    // Set its visual range to 600->0.
+    yScale.range([HEIGHT, 0]);
+    // Get the minimum y data value by looking at the count property of each datum.
+    var yMin = d3.min(dataset, function(datum, index){
+        return datum.value;
+    })
+    console.log(yMin);
+    // Get the maximum y data value by looking at the count property of each datum.
+    var yMax = d3.max(dataset, function(datum, index){
+        return datum.value;
+    })
+    // console.log(yMax);
+    // Set the domain of yScale from yMin and yMax.
+    yScale.domain([yMin-30, yMax]);
+    d3.selectAll('rect')
+        .attr('height', function(datum, index) {
+        // Set the height of each rectangle by getting the count property of each datum
+        //  converting it to a visual value, using yScale
+        //  then subtract that value from HEIGHT.
+            return HEIGHT-yScale(datum.value);
+        });
+
+  //-----Adjusting the horizontal and the vertical placement of the bars.-----//
+
+  // Create the xScale.
+    var xScale = d3.scaleLinear();
+    // Set the range to 0->800.
+    xScale.range([0, WIDTH]);
+  // Set the domain from 0 to the number of data elements retrieved.
+    xScale.domain([0, dataset.length]);
+    // Select all rectangles.
+    d3.selectAll('rect')
+        .attr('x', function(datum, index) {
+            // Set the x position of each rectangle
+            //  by converting the index of the elemnt in the array to a point between 0->800.
+            return xScale(index);
+        });
+    d3.selectAll('rect')
+        .attr('y', function(datum, index){
+            // Set the y position of each rectangle
+            //  by converting the count property of the datum to a visual value.
+            return yScale(datum.value);
+        });
+
+    //-----Making the width of the bars dynamic.-----//
+
+    // Set the width of all rectangles to be the width of the SVG divided by the number of data elements.
+    d3.selectAll('rect')
+        .attr('width', WIDTH/dataset.length);
+
+    //-----Interactivity.-----//
+
+    d3.selectAll('rect')
+        .append("title")
+        .text(function(dataset) {
+            return "Response Time: " + dataset.key + "(hh:mm)" + "\n"
+                + "Count: " + dataset.value;
+        });
+
+    //-----Changing the color of the bar based on data.-----//
+
+    var yDomain = d3.extent(dataset, function(datum, index) {
+        // Set the y domain by getting the min/max
+        //  and examining the count property of each datum.
+        return datum.value;
+    })
+
+    // Create a linear scale.
+    var colorScale = d3.scaleLinear();
+    colorScale.domain(yDomain)
+    // colorScale.range(['#00cc00', 'blue']) // The visual range goes from green->blue.
+    colorScale.range(['#bbbbbb', '#595959'])
+
+    d3.selectAll('rect')
+        .attr('fill', function(datum, index) {
+            // Set the fill of each rectangle
+            //  by converting the count property of the datum to a color.
+            return colorScale(datum.value)
+        })
+  });
+}
+    </script>
+    <button type="button" style="height:150px;width:150px" onclick="Chinatown();">
+      <img src="Kim_Data/Chinatown.png" alt="Place Holder" />
+      Chinatown
+    </button>
+
+    <script type="text/javascript">
+function Mission() {
+  d3.select('svg').remove();
+  var svg = d3.select('body').append('svg').attr('width','960').attr('height','600'),
+      inner = svg.append('g');
+
+  var WIDTH = 960;
+  var HEIGHT = 500;
+
+  // Set width and height of svg.
+  d3.select('svg')
+      .style('width', WIDTH)
+      .style('height', HEIGHT);
+
+  // Fetch data.
+  d3.csv('Kim_Data/Mission.csv').then(function(csv_data) {
+    var dataset = d3.nest()
+      .key(function(d) {
+        return d.Arrival_DtTm;
+      })
+      .rollup(function(v) {
+        return v.length;
+      })
+      .entries(csv_data);
+
+    console.log(dataset);
+
+    // Select rectangles within svg.
+    d3.select('svg').selectAll('rect')
+        // Attach data to the rectangles.
+        .data(dataset)
+        // Find the data elements that are not attached to rectangles.
+        .enter()
+        // Append rectangles for each data not attached to a rectangle.
+        .append('rect');
+
+    // Create a linear scale.
+  var yScale = d3.scaleLinear();
+    // Set its visual range to 600->0.
+    yScale.range([HEIGHT, 0]);
+    // Get the minimum y data value by looking at the count property of each datum.
+    var yMin = d3.min(dataset, function(datum, index){
+        return datum.value;
+    })
+    console.log(yMin);
+    // Get the maximum y data value by looking at the count property of each datum.
+    var yMax = d3.max(dataset, function(datum, index){
+        return datum.value;
+    })
+    // console.log(yMax);
+    // Set the domain of yScale from yMin and yMax.
+    yScale.domain([yMin-30, yMax]);
+    d3.selectAll('rect')
+        .attr('height', function(datum, index) {
+        // Set the height of each rectangle by getting the count property of each datum
+        //  converting it to a visual value, using yScale
+        //  then subtract that value from HEIGHT.
+            return HEIGHT-yScale(datum.value);
+        });
+
+  //-----Adjusting the horizontal and the vertical placement of the bars.-----//
+
+  // Create the xScale.
+    var xScale = d3.scaleLinear();
+    // Set the range to 0->800.
+    xScale.range([0, WIDTH]);
+  // Set the domain from 0 to the number of data elements retrieved.
+    xScale.domain([0, dataset.length]);
+    // Select all rectangles.
+    d3.selectAll('rect')
+        .attr('x', function(datum, index) {
+            // Set the x position of each rectangle
+            //  by converting the index of the elemnt in the array to a point between 0->800.
+            return xScale(index);
+        });
+    d3.selectAll('rect')
+        .attr('y', function(datum, index){
+            // Set the y position of each rectangle
+            //  by converting the count property of the datum to a visual value.
+            return yScale(datum.value);
+        });
+
+    //-----Making the width of the bars dynamic.-----//
+
+    // Set the width of all rectangles to be the width of the SVG divided by the number of data elements.
+    d3.selectAll('rect')
+        .attr('width', WIDTH/dataset.length);
+
+    //-----Interactivity.-----//
+
+    d3.selectAll('rect')
+        .append("title")
+        .text(function(dataset) {
+            return "Response Time: " + dataset.key + "(hh:mm)" + "\n"
+                + "Count: " + dataset.value;
+        });
+
+    //-----Changing the color of the bar based on data.-----//
+
+    var yDomain = d3.extent(dataset, function(datum, index) {
+        // Set the y domain by getting the min/max
+        //  and examining the count property of each datum.
+        return datum.value;
+    })
+
+    // Create a linear scale.
+    var colorScale = d3.scaleLinear();
+    colorScale.domain(yDomain)
+    // colorScale.range(['#00cc00', 'blue']) // The visual range goes from green->blue.
+    colorScale.range(['#bbbbbb', '#595959'])
+
+    d3.selectAll('rect')
+        .attr('fill', function(datum, index) {
+            // Set the fill of each rectangle
+            //  by converting the count property of the datum to a color.
+            return colorScale(datum.value)
+        })
+  });
+}
+    </script>
+    <button type="button" style="height:150px;width:150px" onclick="Mission();">
+      <img src="Kim_Data/Mission.png" alt="Place Holder" />
+      Mission
+    </button>
+<br/>
+    <script type="text/javascript">
+function Outer_Richmond() {
+  d3.select('svg').remove();
+  var svg = d3.select('body').append('svg').attr('width','960').attr('height','600'),
+      inner = svg.append('g');
+
+  var WIDTH = 960;
+  var HEIGHT = 500;
+
+  // Set width and height of svg.
+  d3.select('svg')
+      .style('width', WIDTH)
+      .style('height', HEIGHT);
+
+  // Fetch data.
+  d3.csv('Kim_Data/Outer_Richmond.csv').then(function(csv_data) {
+    var dataset = d3.nest()
+      .key(function(d) {
+        return d.Arrival_DtTm;
+      })
+      .rollup(function(v) {
+        return v.length;
+      })
+      .entries(csv_data);
+
+    console.log(dataset);
+
+    // Select rectangles within svg.
+    d3.select('svg').selectAll('rect')
+        // Attach data to the rectangles.
+        .data(dataset)
+        // Find the data elements that are not attached to rectangles.
+        .enter()
+        // Append rectangles for each data not attached to a rectangle.
+        .append('rect');
+
+    // Create a linear scale.
+  var yScale = d3.scaleLinear();
+    // Set its visual range to 600->0.
+    yScale.range([HEIGHT, 0]);
+    // Get the minimum y data value by looking at the count property of each datum.
+    var yMin = d3.min(dataset, function(datum, index){
+        return datum.value;
+    })
+    console.log(yMin);
+    // Get the maximum y data value by looking at the count property of each datum.
+    var yMax = d3.max(dataset, function(datum, index){
+        return datum.value;
+    })
+    // console.log(yMax);
+    // Set the domain of yScale from yMin and yMax.
+    yScale.domain([yMin-30, yMax]);
+    d3.selectAll('rect')
+        .attr('height', function(datum, index) {
+        // Set the height of each rectangle by getting the count property of each datum
+        //  converting it to a visual value, using yScale
+        //  then subtract that value from HEIGHT.
+            return HEIGHT-yScale(datum.value);
+        });
+
+  //-----Adjusting the horizontal and the vertical placement of the bars.-----//
+
+  // Create the xScale.
+    var xScale = d3.scaleLinear();
+    // Set the range to 0->800.
+    xScale.range([0, WIDTH]);
+  // Set the domain from 0 to the number of data elements retrieved.
+    xScale.domain([0, dataset.length]);
+    // Select all rectangles.
+    d3.selectAll('rect')
+        .attr('x', function(datum, index) {
+            // Set the x position of each rectangle
+            //  by converting the index of the elemnt in the array to a point between 0->800.
+            return xScale(index);
+        });
+    d3.selectAll('rect')
+        .attr('y', function(datum, index){
+            // Set the y position of each rectangle
+            //  by converting the count property of the datum to a visual value.
+            return yScale(datum.value);
+        });
+
+    //-----Making the width of the bars dynamic.-----//
+
+    // Set the width of all rectangles to be the width of the SVG divided by the number of data elements.
+    d3.selectAll('rect')
+        .attr('width', WIDTH/dataset.length);
+
+    //-----Interactivity.-----//
+
+    d3.selectAll('rect')
+        .append("title")
+        .text(function(dataset) {
+            return "Response Time: " + dataset.key + "(hh:mm)" + "\n"
+                + "Count: " + dataset.value;
+        });
+
+    //-----Changing the color of the bar based on data.-----//
+
+    var yDomain = d3.extent(dataset, function(datum, index) {
+        // Set the y domain by getting the min/max
+        //  and examining the count property of each datum.
+        return datum.value;
+    })
+
+    // Create a linear scale.
+    var colorScale = d3.scaleLinear();
+    colorScale.domain(yDomain)
+    // colorScale.range(['#00cc00', 'blue']) // The visual range goes from green->blue.
+    colorScale.range(['#bbbbbb', '#595959'])
+
+    d3.selectAll('rect')
+        .attr('fill', function(datum, index) {
+            // Set the fill of each rectangle
+            //  by converting the count property of the datum to a color.
+            return colorScale(datum.value)
+        })
+  });
+}
+    </script>
+    <button type="button" style="height:150px;width:150px" onclick="Outer_Richmond();">
+      <img src="Kim_Data/Outer_Richmond.png" alt="Place Holder" />
+      Outer Richmond
+    </button>
+
+    <script type="text/javascript">
+function South_of_Market() {
+  d3.select('svg').remove();
+  var svg = d3.select('body').append('svg').attr('width','960').attr('height','600'),
+      inner = svg.append('g');
+
+  var WIDTH = 960;
+  var HEIGHT = 500;
+
+  // Set width and height of svg.
+  d3.select('svg')
+      .style('width', WIDTH)
+      .style('height', HEIGHT);
+
+  // Fetch data.
+  d3.csv('Kim_Data/South_of_Market.csv').then(function(csv_data) {
+    var dataset = d3.nest()
+      .key(function(d) {
+        return d.Arrival_DtTm;
+      })
+      .rollup(function(v) {
+        return v.length;
+      })
+      .entries(csv_data);
+
+    console.log(dataset);
+
+    // Select rectangles within svg.
+    d3.select('svg').selectAll('rect')
+        // Attach data to the rectangles.
+        .data(dataset)
+        // Find the data elements that are not attached to rectangles.
+        .enter()
+        // Append rectangles for each data not attached to a rectangle.
+        .append('rect');
+
+    // Create a linear scale.
+  var yScale = d3.scaleLinear();
+    // Set its visual range to 600->0.
+    yScale.range([HEIGHT, 0]);
+    // Get the minimum y data value by looking at the count property of each datum.
+    var yMin = d3.min(dataset, function(datum, index){
+        return datum.value;
+    })
+    console.log(yMin);
+    // Get the maximum y data value by looking at the count property of each datum.
+    var yMax = d3.max(dataset, function(datum, index){
+        return datum.value;
+    })
+    // console.log(yMax);
+    // Set the domain of yScale from yMin and yMax.
+    yScale.domain([yMin-30, yMax]);
+    d3.selectAll('rect')
+        .attr('height', function(datum, index) {
+        // Set the height of each rectangle by getting the count property of each datum
+        //  converting it to a visual value, using yScale
+        //  then subtract that value from HEIGHT.
+            return HEIGHT-yScale(datum.value);
+        });
+
+  //-----Adjusting the horizontal and the vertical placement of the bars.-----//
+
+  // Create the xScale.
+    var xScale = d3.scaleLinear();
+    // Set the range to 0->800.
+    xScale.range([0, WIDTH]);
+  // Set the domain from 0 to the number of data elements retrieved.
+    xScale.domain([0, dataset.length]);
+    // Select all rectangles.
+    d3.selectAll('rect')
+        .attr('x', function(datum, index) {
+            // Set the x position of each rectangle
+            //  by converting the index of the elemnt in the array to a point between 0->800.
+            return xScale(index);
+        });
+    d3.selectAll('rect')
+        .attr('y', function(datum, index){
+            // Set the y position of each rectangle
+            //  by converting the count property of the datum to a visual value.
+            return yScale(datum.value);
+        });
+
+    //-----Making the width of the bars dynamic.-----//
+
+    // Set the width of all rectangles to be the width of the SVG divided by the number of data elements.
+    d3.selectAll('rect')
+        .attr('width', WIDTH/dataset.length);
+
+    //-----Interactivity.-----//
+
+    d3.selectAll('rect')
+        .append("title")
+        .text(function(dataset) {
+            return "Response Time: " + dataset.key + "(hh:mm)" + "\n"
+                + "Count: " + dataset.value;
+        });
+
+    //-----Changing the color of the bar based on data.-----//
+
+    var yDomain = d3.extent(dataset, function(datum, index) {
+        // Set the y domain by getting the min/max
+        //  and examining the count property of each datum.
+        return datum.value;
+    })
+
+    // Create a linear scale.
+    var colorScale = d3.scaleLinear();
+    colorScale.domain(yDomain)
+    // colorScale.range(['#00cc00', 'blue']) // The visual range goes from green->blue.
+    colorScale.range(['#bbbbbb', '#595959'])
+
+    d3.selectAll('rect')
+        .attr('fill', function(datum, index) {
+            // Set the fill of each rectangle
+            //  by converting the count property of the datum to a color.
+            return colorScale(datum.value)
+        })
+  });
+}
+    </script>
+    <button type="button" style="height:150px;width:150px" onclick="South_of_Market();">
+      <img src="Kim_Data/South_of_Market.png" alt="Place Holder" />
+      South of Market
+    </button>
+
+    <script type="text/javascript">
+function Tenderloin() {
+  d3.select('svg').remove();
+  var svg = d3.select('body').append('svg').attr('width','960').attr('height','600'),
+      inner = svg.append('g');
+
+  var WIDTH = 960;
+  var HEIGHT = 500;
+
+  // Set width and height of svg.
+  d3.select('svg')
+      .style('width', WIDTH)
+      .style('height', HEIGHT);
+
+  // Fetch data.
+  d3.csv('Kim_Data/Tenderloin.csv').then(function(csv_data) {
+    var dataset = d3.nest()
+      .key(function(d) {
+        return d.Arrival_DtTm;
+      })
+      .rollup(function(v) {
+        return v.length;
+      })
+      .entries(csv_data);
+
+    console.log(dataset);
+
+    // Select rectangles within svg.
+    d3.select('svg').selectAll('rect')
+        // Attach data to the rectangles.
+        .data(dataset)
+        // Find the data elements that are not attached to rectangles.
+        .enter()
+        // Append rectangles for each data not attached to a rectangle.
+        .append('rect');
+
+    // Create a linear scale.
+  var yScale = d3.scaleLinear();
+    // Set its visual range to 600->0.
+    yScale.range([HEIGHT, 0]);
+    // Get the minimum y data value by looking at the count property of each datum.
+    var yMin = d3.min(dataset, function(datum, index){
+        return datum.value;
+    })
+    console.log(yMin);
+    // Get the maximum y data value by looking at the count property of each datum.
+    var yMax = d3.max(dataset, function(datum, index){
+        return datum.value;
+    })
+    // console.log(yMax);
+    // Set the domain of yScale from yMin and yMax.
+    yScale.domain([yMin-30, yMax]);
+    d3.selectAll('rect')
+        .attr('height', function(datum, index) {
+        // Set the height of each rectangle by getting the count property of each datum
+        //  converting it to a visual value, using yScale
+        //  then subtract that value from HEIGHT.
+            return HEIGHT-yScale(datum.value);
+        });
+
+  //-----Adjusting the horizontal and the vertical placement of the bars.-----//
+
+  // Create the xScale.
+    var xScale = d3.scaleLinear();
+    // Set the range to 0->800.
+    xScale.range([0, WIDTH]);
+  // Set the domain from 0 to the number of data elements retrieved.
+    xScale.domain([0, dataset.length]);
+    // Select all rectangles.
+    d3.selectAll('rect')
+        .attr('x', function(datum, index) {
+            // Set the x position of each rectangle
+            //  by converting the index of the elemnt in the array to a point between 0->800.
+            return xScale(index);
+        });
+    d3.selectAll('rect')
+        .attr('y', function(datum, index){
+            // Set the y position of each rectangle
+            //  by converting the count property of the datum to a visual value.
+            return yScale(datum.value);
+        });
+
+    //-----Making the width of the bars dynamic.-----//
+
+    // Set the width of all rectangles to be the width of the SVG divided by the number of data elements.
+    d3.selectAll('rect')
+        .attr('width', WIDTH/dataset.length);
+
+    //-----Interactivity.-----//
+
+    d3.selectAll('rect')
+        .append("title")
+        .text(function(dataset) {
+            return "Response Time: " + dataset.key + "(hh:mm)" + "\n"
+                + "Count: " + dataset.value;
+        });
+
+    //-----Changing the color of the bar based on data.-----//
+
+    var yDomain = d3.extent(dataset, function(datum, index) {
+        // Set the y domain by getting the min/max
+        //  and examining the count property of each datum.
+        return datum.value;
+    })
+
+    // Create a linear scale.
+    var colorScale = d3.scaleLinear();
+    colorScale.domain(yDomain)
+    // colorScale.range(['#00cc00', 'blue']) // The visual range goes from green->blue.
+    colorScale.range(['#bbbbbb', '#595959'])
+
+    d3.selectAll('rect')
+        .attr('fill', function(datum, index) {
+            // Set the fill of each rectangle
+            //  by converting the count property of the datum to a color.
+            return colorScale(datum.value)
+        })
+  });
+}
+    </script>
+    <button type="button" style="height:150px;width:150px" onclick="Tenderloin();">
+      <img src="Kim_Data/Tenderloin.png" alt="Place Holder" />
+      Tenderloin
+    </button>
+
+    <script type="text/javascript">
+function Western_Addition() {
+  d3.select('svg').remove();
+  var svg = d3.select('body').append('svg').attr('width','960').attr('height','600'),
+      inner = svg.append('g');
+
+  var WIDTH = 960;
+  var HEIGHT = 500;
+
+  // Set width and height of svg.
+  d3.select('svg')
+      .style('width', WIDTH)
+      .style('height', HEIGHT);
+
+  // Fetch data.
+  d3.csv('Kim_Data/Western_Addition.csv').then(function(csv_data) {
+    var dataset = d3.nest()
+      .key(function(d) {
+        return d.Arrival_DtTm;
+      })
+      .rollup(function(v) {
+        return v.length;
+      })
+      .entries(csv_data);
+
+    console.log(dataset);
+
+    // Select rectangles within svg.
+    d3.select('svg').selectAll('rect')
+        // Attach data to the rectangles.
+        .data(dataset)
+        // Find the data elements that are not attached to rectangles.
+        .enter()
+        // Append rectangles for each data not attached to a rectangle.
+        .append('rect');
+
+    // Create a linear scale.
+  var yScale = d3.scaleLinear();
+    // Set its visual range to 600->0.
+    yScale.range([HEIGHT, 0]);
+    // Get the minimum y data value by looking at the count property of each datum.
+    var yMin = d3.min(dataset, function(datum, index){
+        return datum.value;
+    })
+    console.log(yMin);
+    // Get the maximum y data value by looking at the count property of each datum.
+    var yMax = d3.max(dataset, function(datum, index){
+        return datum.value;
+    })
+    // console.log(yMax);
+    // Set the domain of yScale from yMin and yMax.
+    yScale.domain([yMin-30, yMax]);
+    d3.selectAll('rect')
+        .attr('height', function(datum, index) {
+        // Set the height of each rectangle by getting the count property of each datum
+        //  converting it to a visual value, using yScale
+        //  then subtract that value from HEIGHT.
+            return HEIGHT-yScale(datum.value);
+        });
+
+  //-----Adjusting the horizontal and the vertical placement of the bars.-----//
+
+  // Create the xScale.
+    var xScale = d3.scaleLinear();
+    // Set the range to 0->800.
+    xScale.range([0, WIDTH]);
+  // Set the domain from 0 to the number of data elements retrieved.
+    xScale.domain([0, dataset.length]);
+    // Select all rectangles.
+    d3.selectAll('rect')
+        .attr('x', function(datum, index) {
+            // Set the x position of each rectangle
+            //  by converting the index of the elemnt in the array to a point between 0->800.
+            return xScale(index);
+        });
+    d3.selectAll('rect')
+        .attr('y', function(datum, index){
+            // Set the y position of each rectangle
+            //  by converting the count property of the datum to a visual value.
+            return yScale(datum.value);
+        });
+
+    //-----Making the width of the bars dynamic.-----//
+
+    // Set the width of all rectangles to be the width of the SVG divided by the number of data elements.
+    d3.selectAll('rect')
+        .attr('width', WIDTH/dataset.length);
+
+    //-----Interactivity.-----//
+
+    d3.selectAll('rect')
+        .append("title")
+        .text(function(dataset) {
+            return "Response Time: " + dataset.key + "(hh:mm)" + "\n"
+                + "Count: " + dataset.value;
+        });
+
+    //-----Changing the color of the bar based on data.-----//
+
+    var yDomain = d3.extent(dataset, function(datum, index) {
+        // Set the y domain by getting the min/max
+        //  and examining the count property of each datum.
+        return datum.value;
+    })
+
+    // Create a linear scale.
+    var colorScale = d3.scaleLinear();
+    colorScale.domain(yDomain)
+    // colorScale.range(['#00cc00', 'blue']) // The visual range goes from green->blue.
+    colorScale.range(['#bbbbbb', '#595959'])
+
+    d3.selectAll('rect')
+        .attr('fill', function(datum, index) {
+            // Set the fill of each rectangle
+            //  by converting the count property of the datum to a color.
+            return colorScale(datum.value)
+        })
+  });
+}
+    </script>
+    <button type="button" style="height:150px;width:150px" onclick="Western_Addition();">
+      <img src="Kim_Data/Western_Addition.png" alt="Place Holder" />
+      Western Addition
+    </button>
+
+    <script type="text/javascript">
+function Lone_Mountain_USF() {
+  d3.select('svg').remove();
+  var svg = d3.select('body').append('svg').attr('width','960').attr('height','600'),
+      inner = svg.append('g');
+
+  var WIDTH = 960;
+  var HEIGHT = 500;
+
+  // Set width and height of svg.
+  d3.select('svg')
+      .style('width', WIDTH)
+      .style('height', HEIGHT);
+
+  // Fetch data.
+  d3.csv('Kim_Data/Lone_Mountain_USF.csv').then(function(csv_data) {
+    var dataset = d3.nest()
+      .key(function(d) {
+        return d.Arrival_DtTm;
+      })
+      .rollup(function(v) {
+        return v.length;
+      })
+      .entries(csv_data);
+
+    console.log(dataset);
+
+    // Select rectangles within svg.
+    d3.select('svg').selectAll('rect')
+        // Attach data to the rectangles.
+        .data(dataset)
+        // Find the data elements that are not attached to rectangles.
+        .enter()
+        // Append rectangles for each data not attached to a rectangle.
+        .append('rect');
+
+    // Create a linear scale.
+  var yScale = d3.scaleLinear();
+    // Set its visual range to 600->0.
+    yScale.range([HEIGHT, 0]);
+    // Get the minimum y data value by looking at the count property of each datum.
+    var yMin = d3.min(dataset, function(datum, index){
+        return datum.value;
+    })
+    console.log(yMin);
+    // Get the maximum y data value by looking at the count property of each datum.
+    var yMax = d3.max(dataset, function(datum, index){
+        return datum.value;
+    })
+    // console.log(yMax);
+    // Set the domain of yScale from yMin and yMax.
+    yScale.domain([yMin-30, yMax]);
+    d3.selectAll('rect')
+        .attr('height', function(datum, index) {
+        // Set the height of each rectangle by getting the count property of each datum
+        //  converting it to a visual value, using yScale
+        //  then subtract that value from HEIGHT.
+            return HEIGHT-yScale(datum.value);
+        });
+
+  //-----Adjusting the horizontal and the vertical placement of the bars.-----//
+
+  // Create the xScale.
+    var xScale = d3.scaleLinear();
+    // Set the range to 0->800.
+    xScale.range([0, WIDTH]);
+  // Set the domain from 0 to the number of data elements retrieved.
+    xScale.domain([0, dataset.length]);
+    // Select all rectangles.
+    d3.selectAll('rect')
+        .attr('x', function(datum, index) {
+            // Set the x position of each rectangle
+            //  by converting the index of the elemnt in the array to a point between 0->800.
+            return xScale(index);
+        });
+    d3.selectAll('rect')
+        .attr('y', function(datum, index){
+            // Set the y position of each rectangle
+            //  by converting the count property of the datum to a visual value.
+            return yScale(datum.value);
+        });
+
+    //-----Making the width of the bars dynamic.-----//
+
+    // Set the width of all rectangles to be the width of the SVG divided by the number of data elements.
+    d3.selectAll('rect')
+        .attr('width', WIDTH/dataset.length);
+
+    //-----Interactivity.-----//
+
+    d3.selectAll('rect')
+        .append("title")
+        .text(function(dataset) {
+            return "Response Time: " + dataset.key + "(hh:mm)" + "\n"
+                + "Count: " + dataset.value;
+        });
+
+    //-----Changing the color of the bar based on data.-----//
+
+    var yDomain = d3.extent(dataset, function(datum, index) {
+        // Set the y domain by getting the min/max
+        //  and examining the count property of each datum.
+        return datum.value;
+    })
+
+    // Create a linear scale.
+    var colorScale = d3.scaleLinear();
+    colorScale.domain(yDomain)
+    // colorScale.range(['#00cc00', 'blue']) // The visual range goes from green->blue.
+    colorScale.range(['#bbbbbb', '#595959'])
+
+    d3.selectAll('rect')
+        .attr('fill', function(datum, index) {
+            // Set the fill of each rectangle
+            //  by converting the count property of the datum to a color.
+            return colorScale(datum.value)
+        })
+  });
+}
+    </script>
+    <button type="button" style="height:150px;width:150px" onclick="Lone_Mountain_USF();">
+      <img src="Kim_Data/Lone_Mountain_USF.png" alt="Place Holder" />
+      Lone Mountain/USF
+    </button>
+
+    <!-- <svg width="960" height="500" style="background-color: whitesmoke; border: 1px solid black;"> </svg> -->
+    </div>
+  </section>
+
+  <!-- separator between sections -->
+  <!-- <hr class="container"> -->
+
+  <!-- footer -->
+  <!-- <footer class="footer">
+    <div class="content has-text-centered">
+      <small>
+        <a href="#top">
+          <span class="fas fa-arrow-up"></span>
+          <span> Back to Top </span>
+        </a>
+        <br/>
+        <a href="/">CS 360/560 Data Visualization</a>
+        &bullet;
+
+        <a href="https://myusf.usfca.edu/arts-sciences/computer-science"> Department of Computer Science </a>
+        &bullet;
+        <a href="https://www.usfca.edu/"> University of San Franciscio </a>
+      </small>
+    </div>
+  </footer> -->
+
+<!-- end body and html -->
+</body>
+</html>
