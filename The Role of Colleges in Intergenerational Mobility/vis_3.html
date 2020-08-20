@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Head. -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title> Homework 2_Kibeom Kim </title>
+
+  <!-- bulma 0.7.2 and font awesome v5.7.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" integrity="sha256-2pUeJf+y0ltRPSbKOeJh09ipQFYxUdct5nTY6GAXswA=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+  
+  <style>
+    svg {
+      font: 10px sans-serif;
+      padding: 10px;
+    }
+
+    .axis,
+    .frame {
+      shape-rendering: crispEdges;
+    }
+
+    .axis line {
+      stroke: #ddd;
+    }
+
+    .axis path {
+      display: none;
+    }
+
+    .cell text {
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+
+    .frame {
+      fill: none;
+      stroke: #aaa;
+    }
+
+    circle {
+      fill-opacity: .7;
+    }
+  </style>
+
+  <script src="https://d3js.org/d3.v3.min.js"> </script>
+</head>
+
+<!-- Body. -->
+<body>
+  <!-- Header. -->
+  <section class="hero is-primary is-bold">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title"> Homework 2 </h1>
+        <h2 class="subtitle"> Kibeom Kim </h2>
+      </div>
+    </div>
+
+    <div class="hero-foot">
+      <div class="container">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+          <div class="navbar-brand">
+            <!-- Home. -->
+            <a class="navbar-item" href="index.html">
+              <span class="icon">
+                <i class="fas fa-home"> </i>
+              </span>
+              <span> Home </span>
+            </a>
+          </div>
+          
+          <div class="navbar-menu">
+            <!-- Visualization 1. -->
+            <a class="navbar-item" href="vis_1.html">
+              <span class="icon">
+                <i class="fas fa-chart-area"> </i>
+              </span>
+              <span> Visualization 1 </span>
+            </a>
+            <!-- Visualization 2. -->
+            <a class="navbar-item" href="vis_2.html">
+              <span class="icon">
+                <i class="fas fa-chart-area"> </i>
+              </span>
+              <span> Visualization 2 </span>
+            </a>
+            <!-- Visualization 3. -->
+            <a class="navbar-item" href="vis_3.html">
+              <span class="icon">
+                <i class="fas fa-chart-area"> </i>
+              </span>
+              <span> Visualization 3 </span>
+            </a>
+          </div>
+
+          <div class="navbar-end">
+            <!-- Grade. -->
+            <a class="navbar-item" href="index.html#grade">
+              <span class="icon">
+                <i class="fas fa-tasks"> </i>
+              </span>
+              <span> Grade </span>
+            </a>
+            <!-- About. -->
+            <a class="navbar-item" href="index.html#about">
+              <span class="icon">
+                <i class="fas fa-info-circle"> </i>
+              </span>
+              <span> About </span>
+            </a>
+          </div>
+
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <!-- Separator between sections. -->
+  <hr class="container">
+
+  <section class="section">
+    <div class="container content">
+      <h3> Mobility Rate Correlation of Universities between in California, New York, and Massachusetts </h3>
+      <script src="scatterplot_matrix.js"> </script>
+      <br/>
+      <br/>
+      <h4>Interpretation</h4>
+      <p>
+        I implemented mobility rate normalized correlation of universities between in California, New York, and Massachusetts using scatter plot matrix.
+      </p>
+      <h4>Credit</h4>
+      <p>
+        - Murray, Scott. Interactive Data Visualization for the Web <br/>
+        - Rininsland, Andrew. D3.js 4.x Data Visualization <br/>
+        - Zhu, Nick Qi. Data Visualization with D3.js Cookbook <br/>
+        - Dale, Kyran. Data Visualization with Python and JavaScript <br/>
+        - D3 Scatterplot Matrix by Mike Bostock https://observablehq.com/@d3/d3-scatterplot-matrix
+      </p>
+    </div>
+  </section>
+
+<!-- End body and html. -->
+</body>
+</html>

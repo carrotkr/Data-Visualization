@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Head. -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title> Homework 2_Kibeom Kim </title>
+
+  <!-- bulma 0.7.2 and font awesome v5.7.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" integrity="sha256-2pUeJf+y0ltRPSbKOeJh09ipQFYxUdct5nTY6GAXswA=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <link href="style_zillow.css" rel="stylesheet" type="text/css">
+
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="colorbrewer.js"></script>
+</head>
+
+<!-- Body. -->
+<body>
+  <!-- Header. -->
+  <section class="hero is-primary is-bold">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title"> Homework 2 </h1>
+        <h2 class="subtitle"> Kibeom Kim </h2>
+      </div>
+    </div>
+
+    <div class="hero-foot">
+      <div class="container">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+          <div class="navbar-brand">
+            <!-- Home. -->
+            <a class="navbar-item" href="index.html">
+              <span class="icon">
+                <i class="fas fa-home"> </i>
+              </span>
+              <span> Home </span>
+            </a>
+          </div>
+          
+          <div class="navbar-menu">
+            <!-- Visualization 1. -->
+            <a class="navbar-item" href="vis_1.html">
+              <span class="icon">
+                <i class="fas fa-chart-area"> </i>
+              </span>
+              <span> Visualization 1 </span>
+            </a>
+            <!-- Visualization 2. -->
+            <a class="navbar-item" href="vis_2.html">
+              <span class="icon">
+                <i class="fas fa-chart-area"> </i>
+              </span>
+              <span> Visualization 2 </span>
+            </a>
+            <!-- Visualization 3. -->
+            <a class="navbar-item" href="vis_3.html">
+              <span class="icon">
+                <i class="fas fa-chart-area"> </i>
+              </span>
+              <span> Visualization 3 </span>
+            </a>
+          </div>
+
+          <div class="navbar-end">
+            <!-- Grade. -->
+            <a class="navbar-item" href="index.html#grade">
+              <span class="icon">
+                <i class="fas fa-tasks"> </i>
+              </span>
+              <span> Grade </span>
+            </a>
+            <!-- About. -->
+            <a class="navbar-item" href="index.html#about">
+              <span class="icon">
+                <i class="fas fa-info-circle"> </i>
+              </span>
+              <span> About </span>
+            </a>
+          </div>
+
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <!-- Separator between sections. -->
+  <hr class="container">
+
+  <section class="section">
+    <div class="container content">
+      <h3> Mobility Rate in the Bay Area Universities </h3>
+      <script src="heatmap.js"></script>
+      <script>
+        // Helper method to make translating easier.
+        var translate = function(x, y) {
+          return "translate(" + x + "," + y + ")";
+        };
+
+        // Container for configuration parameters.
+        var config = {};
+
+        config.svg = {width: 960, height: 500};
+        config.margin = {top: 50, right: 10, bottom: 20, left: 200};
+
+        config.plot = {
+          width: config.svg.width - config.margin.right - config.margin.left,
+          height: config.svg.height - config.margin.top - config.margin.bottom
+        };
+
+        config.legend = {
+          width: 100,
+          height: 15
+        };
+
+        // Create svg based on config.
+        var svg = d3.select("body").append("svg")
+          .attr("width", config.svg.width)
+          .attr("height", config.svg.height);
+
+        // Create plot area based on config.
+        var plot = svg.append("g")
+          .attr("id", "plot")
+          .attr("transform", translate(config.margin.left, config.margin.top));
+
+        var xScale = d3.scale.ordinal()
+          .rangeBands([0, config.plot.width], 0, 0);
+
+        var yScale = d3.scale.ordinal()
+          .rangeBands([config.plot.height, 0], 0, 0);
+
+        // Changed this to a diverging scale.
+        var colorScale = d3.scale.linear()
+          .range(colorbrewer.Spectral[3].reverse());
+
+        // Placeholder for data.
+        var data = [];
+
+        data = d3.csv("mrc_table_vis_2.csv",
+        // Accessor.
+        function(row) {
+          var data_output = {
+            values: []
+          };
+
+          for (var col in row) {
+            switch(col) {
+            // These are string columns that do not need to be converted.
+            case "name":
+            case "czname":
+            case "state":
+              data_output[col] = row[col];
+              break;
+
+            // These are float columns that need to be converted.
+            case "par_median_standardize":
+            case "k_median_standardize":
+            case "par_q1_standardize":
+            case "kq5_cond_parq1_standardize":
+            case "mr_kq5_pq1_standardize":
+              var std_category = col;
+              var std_value = parseFloat(row[col]);
+              data_output.values.push({category: std_category, value: std_value});
+              break;
+            }
+          }
+          console.log(data_output);
+
+          return data_output;
+        },
+        // Callback.
+        function(error, rows) {
+    if (error) {
+      console.warn(error);
+    }
+
+    data = rows.filter(function(row) {
+      return row["state"] === "CA" &&
+             row["czname"] === "San Francisco" ||
+             row["czname"] === "San Jose";
+    });
+
+    var university_name = data.map(function(row) {
+      return row["name"];
+    });
+    console.log("University", university_name);
+
+    var categories = data[0].values.map(function(value) {
+      return value.category;
+    });
+    console.log("Categories", categories);
+
+    xScale.domain(categories);
+    yScale.domain(university_name);
+
+    // Calculate values for color scale.
+    
+    // Get all of the value objects from the rows.
+    var values = data.map(function(d) {
+      return d.values;
+    });
+    console.log("values", values);
+
+    // Combine all of the individual object arrays into one.
+    merged = d3.merge(values);
+    console.log("merged", merged);
+    
+    // Get only the value part of the objects.
+    mapped = merged.map(function(d) {
+      return d.value;
+    });
+    console.log("mapped", mapped);
+    console.log("number of values:", mapped.length);
+
+    var min = d3.min(mapped);
+    var max = d3.max(mapped);
+    var avg = d3.mean(mapped);
+
+    // scale.color = d3.scaleSequential(d3.interpolateViridis);
+    colorScale.domain([min, avg, max]);
+
+    drawBackground();
+    drawAxes();
+    drawHeatmap();
+    drawTitle();
+    drawLegend();
+  });
+      </script>
+      <br/>
+      <br/>
+      <h4>Interpretation</h4>
+      <p>
+        I implemented mobility rate normalized between 0 and 1 of universities in the Bay Area using heatmap visualization.
+        <br/>
+        How the data is encoded:
+        <br/>
+        - University Array(34) [0: "San Jose State University", 1: "California Maritime Academy", 2: "University Of California, Berkeley", .....]
+        <br/>
+        - Categories Array(5) [0: "par_median_standardize", 1: "k_median_standardize", 2: "mr_kq5_pq1_standardize", 3: "par_q1_standardize", 4: "kq5_cond_parq1_standardize"]
+        <br/>
+        - values Array(34)
+        <br/>
+        - merged Array(170)
+        <br/>
+        - mapped Array(170)
+      </p>
+      <h4>Credit</h4>
+      <p>
+        - Murray, Scott. Interactive Data Visualization for the Web <br/>
+        - Rininsland, Andrew. D3.js 4.x Data Visualization <br/>
+        - Zhu, Nick Qi. Data Visualization with D3.js Cookbook <br/>
+        - Dale, Kyran. Data Visualization with Python and JavaScript <br/>
+        - Zillow Affordability Heatmap by sjengle https://observablehq.com/@sjengle/zillow-affordability-heatmap
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer. -->
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <small>
+        <a href="#top">
+          <span class="fas fa-arrow-up"> </span>
+          <span> Back to Top </span>
+        </a>
+        <br/>
+        <a href="/"> CS 360/560 Data Visualization </a>
+        &bullet;
+        <a href="https://myusf.usfca.edu/arts-sciences/computer-science">Department of Computer Science </a>
+        &bullet;
+        <a href="https://www.usfca.edu/"> University of San Franciscio </a>
+      </small>
+    </div>
+  </footer>
+
+<!-- End body and html. -->
+</body>
+</html>

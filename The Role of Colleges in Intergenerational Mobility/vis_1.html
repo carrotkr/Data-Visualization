@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Head. -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title> Homework 2_Kibeom Kim </title>
+
+  <!-- bulma 0.7.2 and font awesome v5.7.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" integrity="sha256-2pUeJf+y0ltRPSbKOeJh09ipQFYxUdct5nTY6GAXswA=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="https://d3js.org/d3.v5.min.js"> </script>
+</head>
+
+<!-- Body. -->
+<body>
+  <!-- Header. -->
+  <section class="hero is-primary is-bold">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title"> Homework 2 </h1>
+        <h2 class="subtitle"> Kibeom Kim </h2>
+      </div>
+    </div>
+
+    <div class="hero-foot">
+      <div class="container">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+          <div class="navbar-brand">
+            <!-- Home. -->
+            <a class="navbar-item" href="index.html">
+              <span class="icon">
+                <i class="fas fa-home"> </i>
+              </span>
+              <span> Home </span>
+            </a>
+          </div>
+          
+          <div class="navbar-menu">
+            <!-- Visualization 1. -->
+            <a class="navbar-item" href="vis_1.html">
+              <span class="icon">
+                <i class="fas fa-chart-area"> </i>
+              </span>
+              <span> Visualization 1 </span>
+            </a>
+            <!-- Visualization 2. -->
+            <a class="navbar-item" href="vis_2.html">
+              <span class="icon">
+                <i class="fas fa-chart-area"> </i>
+              </span>
+              <span> Visualization 2 </span>
+            </a>
+            <!-- Visualization 3. -->
+            <a class="navbar-item" href="vis_3.html">
+              <span class="icon">
+                <i class="fas fa-chart-area"> </i>
+              </span>
+              <span> Visualization 3 </span>
+            </a>
+          </div>
+
+          <div class="navbar-end">
+            <!-- Grade. -->
+            <a class="navbar-item" href="index.html#grade">
+              <span class="icon">
+                <i class="fas fa-tasks"> </i>
+              </span>
+              <span> Grade </span>
+            </a>
+            <!-- About. -->
+            <a class="navbar-item" href="index.html#about">
+              <span class="icon">
+                <i class="fas fa-info-circle"> </i>
+              </span>
+              <span> About </span>
+            </a>
+          </div>
+
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <!-- Separator between sections. -->
+  <hr class="container">
+
+  <section class="section">
+    <div class="container content">
+      <h3> Mobility Rate of Universities in New York </h3>
+      <svg id="ny" style="background-color: white;"> </svg>
+
+      <!-- Include d3-legend. https://d3-legend.susielu.com/ -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js" integrity="sha256-qo76Vs9B6JAALbrTn+PcN1r09hbNLd2M78V19glOMeU=" crossorigin="anonymous"> </script>
+
+      <!-- Craft visualization. -->
+      <script src="bubble_plot_NY.js"> </script>
+
+      <br/>
+      <br/>
+      <h4>Interpretation</h4>
+        
+      <p>
+        I implemented correlation between mobility rate, median parent household income, and average cohort count of universities in New York state through bubble plot visualization
+        <br/>
+        How the data is encoded:
+        <br/>
+        - loaded: 2202 objects [Object -> count: 207, income: 30900, label: false, mobility: 16.357975, name: "Vaughn College Of Aeronautics And Technology", state: "NY", trend: -5.7506108]
+        <br/>
+        - filter: 163 objects [Object -> count: 207, income: 30900, label: false, mobility: 16.357975, name: "Vaughn College Of Aeronautics And Technology", state: "NY", trend: -5.7506108]
+        <br/>
+        - sorted: 163 objects [Object -> count: 4225, income: 80100, label: false, mobility: 2.2971351, name: "Nassau Community College", state: "NY", trend: -0.63776857]
+      </p>
+
+      <h4>Credit</h4>
+      <p>
+        - Murray, Scott. Interactive Data Visualization for the Web <br/>
+        - Rininsland, Andrew. D3.js 4.x Data Visualization <br/>
+        - Zhu, Nick Qi. Data Visualization with D3.js Cookbook <br/>
+        - Dale, Kyran. Data Visualization with Python and JavaScript <br/>
+        - Mobility Bubble Chart by sjengle https://blockbuilder.org/sjengle/0f3caca5c7329733cb8ed912d84807ed
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer. -->
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <small>
+        <a href="#top">
+          <span class="fas fa-arrow-up"> </span>
+          <span> Back to Top </span>
+        </a>
+        <br/>
+        <a href="/"> CS 360/560 Data Visualization </a>
+        &bullet;
+        <a href="https://myusf.usfca.edu/arts-sciences/computer-science">Department of Computer Science </a>
+        &bullet;
+        <a href="https://www.usfca.edu/"> University of San Franciscio </a>
+      </small>
+    </div>
+  </footer>
+
+<!-- End body and html. -->
+</body>
+</html>
